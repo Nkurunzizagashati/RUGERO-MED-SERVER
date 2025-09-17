@@ -40,9 +40,19 @@ const postNews = async (req, res) => {
 				.json({ message: 'File upload failed' });
 		}
 
-		// Save artifact to database
+		// Parse tags if it's a string
+		const newsData = { ...data };
+		if (typeof newsData.tags === 'string') {
+			try {
+				newsData.tags = JSON.parse(newsData.tags);
+			} catch (e) {
+				return res.status(400).json({ message: 'Invalid tags format' });
+			}
+		}
+
+		// Save news to database
 		const postedNews = new News({
-			...data,
+			...newsData,
 			imageUrl,
 		});
 
@@ -93,16 +103,27 @@ const updateNews = async (req, res) => {
 			});
 		}
 
+		// Parse tags if it's a string
+		if (typeof data.tags === 'string') {
+			try {
+				data.tags = JSON.parse(data.tags);
+			} catch (e) {
+				return res.status(400).json({ message: 'Invalid tags format' });
+			}
+		}
+
 		let imageUrl;
 		if (req.files && req.files.image) {
 			imageUrl = await uploadToCloudinary(
 				req.files.image[0].buffer,
 				'artifacts'
 			);
+
+			// Validate upload results
 			if (!imageUrl) {
 				return res
 					.status(500)
-					.json({ message: 'Image upload failed' });
+					.json({ message: 'File upload failed' });
 			}
 		}
 

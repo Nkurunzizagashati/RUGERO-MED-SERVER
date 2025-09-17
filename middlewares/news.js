@@ -22,13 +22,33 @@ const postNewsValidator = {
 				'description should have at least 10 characters',
 		},
 	},
-	category: {
+	tags: {
+		custom: {
+			options: (value) => {
+				try {
+					// If it's a string, try to parse it as JSON
+					const tagsArray = typeof value === 'string' ? JSON.parse(value) : value;
+					// Check if it's an array and has at least one item
+					if (!Array.isArray(tagsArray) || tagsArray.length === 0) {
+						return false;
+					}
+					// Check each tag is a non-empty string
+					return tagsArray.every(tag => typeof tag === 'string' && tag.trim().length > 0);
+				} catch (e) {
+					return false;
+				}
+			},
+			errorMessage: 'Tags must be a valid JSON array of non-empty strings (e.g., ["tag1", "tag2"])',
+		}
+	},
+	reporter: {
 		notEmpty: {
-			errorMessage: 'category should not be empty',
+			errorMessage: 'Reporter name is required',
 		},
 		isString: {
-			errorMessage: 'category should be a string',
+			errorMessage: 'Reporter name must be a string',
 		},
+		trim: true,
 	},
 };
 
@@ -56,14 +76,33 @@ const updateNewsValidator = {
 			errorMessage: 'description should not be empty',
 		},
 	},
-	category: {
+	tags: {
+		optional: true,
+		custom: {
+			options: (value) => {
+				if (value === undefined || value === '') return true; // Skip if optional and not provided
+				try {
+					// If it's a string, try to parse it as JSON
+					const tagsArray = typeof value === 'string' ? JSON.parse(value) : value;
+					// Check if it's an array and has at least one item
+					if (!Array.isArray(tagsArray) || tagsArray.length === 0) {
+						return false;
+					}
+					// Check each tag is a non-empty string
+					return tagsArray.every(tag => typeof tag === 'string' && tag.trim().length > 0);
+				} catch (e) {
+					return false;
+				}
+			},
+			errorMessage: 'Tags must be a valid JSON array of non-empty strings (e.g., ["tag1", "tag2"])',
+		}
+	},
+	reporter: {
 		optional: true,
 		isString: {
-			errorMessage: 'category should be a string',
+			errorMessage: 'Reporter name must be a string',
 		},
-		notEmpty: {
-			errorMessage: 'category should not be empty',
-		},
+		trim: true,
 	},
 };
 

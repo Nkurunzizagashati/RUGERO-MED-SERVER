@@ -12,8 +12,13 @@ const newsSchema = new mongoose.Schema(
 			type: String,
 			minlength: 6,
 		},
-		category: {
+		tags: [{
 			type: String,
+			trim: true,
+		}],
+		reporter: {
+			type: String,
+			trim: true,
 			required: true,
 		},
 
