@@ -12,22 +12,12 @@ const productSchema = new mongoose.Schema(
 			type: String,
 			minlength: 6,
 		},
-price: {
-			type: Number,
-			required: true,
-			trim: true,
-		},
-		category: {
-			type: String,
-			enum: [
-				'CSSD',
-				'Hospital Design',
-				'Plastic Surgery',
-				'Neurosurgery',
-				'Theatre',
-				'Home Care',
-			],
-		},
+		category: [
+			{
+				type: String,
+				trim: true,
+			},
+		],
 
 		imageUrl: {
 			type: String,

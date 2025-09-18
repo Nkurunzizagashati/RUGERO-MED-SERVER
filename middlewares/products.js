@@ -7,14 +7,6 @@ const addProductValidator = {
 			errorMessage: 'title should be a string',
 		},
 	},
-	price: {
-		notEmpty: {
-			errorMessage: 'price should not be empty',
-		},
-		isNumeric: {
-			errorMessage: 'price should be a number',
-		},
-	},
 	description: {
 		notEmpty: {
 			errorMessage: 'description should not be empty',
@@ -30,14 +22,12 @@ const addProductValidator = {
 				'description should have at least 10 characters',
 		},
 	},
-	category: {
-		notEmpty: {
-			errorMessage: 'category should not be empty',
+	category: [
+		{
+			type: String,
+			trim: true,
 		},
-		isString: {
-			errorMessage: 'category should be a string',
-		},
-	},
+	],
 };
 
 const updateProductValidator = {
@@ -66,11 +56,30 @@ const updateProductValidator = {
 	},
 	category: {
 		optional: true,
+		isArray: {
+			errorMessage: 'category should be an array of strings',
+		},
+	},
+	'category.*': {
+		optional: true,
 		isString: {
-			errorMessage: 'category should be a string',
+			errorMessage: 'each category should be a string',
+		},
+		isIn: {
+			options: [
+				[
+					'CSSD',
+					'Hospital Design',
+					'Plastic Surgery',
+					'Neurosurgery',
+					'Theatre',
+					'Home Care',
+				],
+			],
+			errorMessage: 'invalid category',
 		},
 		notEmpty: {
-			errorMessage: 'category should not be empty',
+			errorMessage: 'category item should not be empty',
 		},
 	},
 };
